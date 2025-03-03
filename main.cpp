@@ -7,30 +7,30 @@
 
 using namespace std;
 
-class Preke {
+class Item {
     private:
         static int nextId;
         static int objectCount;
         int id;
-        string pavadinimas;
-        double kaina;
-        int likutis;
+        string name;
+        double price;
+        int count;
 
     public:
-        Preke(const string& pavadinimas, double kaina, int likutis = 0) {
-            init(pavadinimas, kaina, likutis);
+        Item(const string& name, double price, int count = 0) {
+            init(name, price, count);
             id = nextId++;
             objectCount++;
         }
 
-        Preke(const string& pavadinimas) {
-            init(pavadinimas, 0, 0);
+        Item(const string& name) {
+            init(name, 0, 0);
             id = nextId++;
             objectCount++;
         }
 
         // Destruktorius
-        ~Preke() {
+        ~Item() {
             objectCount--;
         }
         
@@ -40,16 +40,16 @@ class Preke {
             return id; 
         }
 
-        string getPavadinimas() const { 
-            return pavadinimas; 
+        string getName() const { 
+            return name; 
         }
 
-        double getKaina() const { 
-            return kaina; 
+        double getPrice() const { 
+            return price; 
         }
 
-        int getLikutis() const {
-            return likutis; 
+        int getCount() const {
+            return count; 
         }
 
         static int getObjectCount() { 
@@ -57,67 +57,67 @@ class Preke {
         }
 
         // Setteriai
-        void setKaina(const double kaina) {
-            if (kaina < 0) {
-                throw invalid_argument("Kaina negali buti neigiama");
+        void setPrice(const double price) {
+            if (price < 0) {
+                throw invalid_argument("price negali buti neigiama");
             }
-            this->kaina = kaina;
+            this->price = price;
         }
 
-        void setLikutis(const int likutis) {
-            if (likutis < 0) {
-                throw invalid_argument("Likutis negali buti neigiamas");
+        void setCount(const int count) {
+            if (count < 0) {
+                throw invalid_argument("count negali buti neigiamas");
             }
-            this->likutis = likutis;
+            this->count = count;
         }
 
     private: 
-            void setPavadinimas(const string pavadinimas) {
-                if(pavadinimas.empty()) {
-                    throw invalid_argument("Pavadinimas negali buti tuscias");
+            void setName(const string name) {
+                if(name.empty()) {
+                    throw invalid_argument("name negali buti tuscias");
                 }
-                this->pavadinimas = pavadinimas;
+                this->name = name;
             }
 
-            void init(const string& pavadinimas, double kaina, int likutis) {
-                setPavadinimas(pavadinimas);
-                setKaina(kaina);
-                setLikutis(likutis);
+            void init(const string& name, double price, int count) {
+                setName(name);
+                setPrice(price);
+                setCount(count);
             }
 
     public:
         // Metodai
         string toString() const {
             stringstream ss;
-            ss << id << " " << pavadinimas << " " <<  kaina << " " << likutis;
+            ss << id << " " << name << " " <<  price << " " << count;
             return ss.str();
         }
 };
 
-int Preke::nextId = 0;
-int Preke::objectCount = 0;
+int Item::nextId = 0;
+int Item::objectCount = 0;
 
 int main() {
     {
         // Testas 1: Objekto kūrimas ir getteriai
-        Preke p1("Obuolys", 0.99, 100);
+        Item p1("Obuolys", 0.99, 100);
         assert(p1.getId() == 0);
-        assert(p1.getPavadinimas() == "Obuolys");
-        assert(p1.getKaina() == 0.99);
-        assert(p1.getLikutis() == 100);
+        assert(p1.getName() == "Obuolys");
+        assert(p1.getPrice() == 0.99);
+        assert(p1.getCount() == 100);
         assert(p1.toString() == "0 Obuolys 0.99 100");
 
         // Testas 2: Setteriai
-        Preke p2("Vanduo", 1.5, 50);
-        assert(p2.getPavadinimas() == "Vanduo");
-        p2.setLikutis(200);
-        assert(p2.getLikutis() == 200);
-        p2.setKaina(0.5);
-        assert(p2.getKaina() == 0.5);
+        Item p2("Vanduo", 1.5, 50);
+        assert(p2.getName() == "Vanduo");
+        p2.setCount(200);
+        assert(p2.getCount() == 200);
+        p2.setPrice(0.5);
+        assert(p2.getPrice() == 0.5);
 
-        // Testas su neteisinga kaina
+        // Testas su neteisinga price
         try {
-            p2.setKaina(-1.0);
+            p2.setPrice(-1.0);
             assert(false); // Turi mesti išimtį
         } catch (const invalid_argument& e) {
             // Laukiama išimtis
@@ -125,43 +125,43 @@ int main() {
 
         // Testas su neteisingu likučiu
         try {
-            p2.setLikutis(-1);
+            p2.setCount(-1);
             assert(false); // Turi mesti išimtį
         } catch (const invalid_argument& e) {
             // Laukiama išimtis
         }
 
         // Testas 3: ID ir objektų kiekis
-        Preke* p3 = new Preke("Sultys");
-        assert(Preke::getObjectCount() == 3);
+        Item* p3 = new Item("Sultys");
+        assert(Item::getObjectCount() == 3);
         assert(p3->getId() == 2);
 
-        Preke* p4 = new Preke("Duona", 1.0, 10);
-        assert(Preke::getObjectCount() == 4);
+        Item* p4 = new Item("Duona", 1.0, 10);
+        assert(Item::getObjectCount() == 4);
         delete p4;
-        assert(Preke::getObjectCount() == 3);
+        assert(Item::getObjectCount() == 3);
         delete p3;
 
         // Objektų sąrašas
-        vector<Preke*> prekes;
-        prekes.push_back(new Preke("Duona", 2.49, 50));
-        prekes.push_back(new Preke("Pienas", 1.79, 30));
-        assert(prekes[0]->toString() == "4 Duona 2.49 50");
-        assert(prekes[1]->toString() == "5 Pienas 1.79 30");
+        vector<Item*> Items;
+        Items.push_back(new Item("Duona", 2.49, 50));
+        Items.push_back(new Item("Pienas", 1.79, 30));
+        assert(Items[0]->toString() == "4 Duona 2.49 50");
+        assert(Items[1]->toString() == "5 Pienas 1.79 30");
 
-        delete prekes[0];
-        delete prekes[1];
-        prekes.clear();
+        delete Items[0];
+        delete Items[1];
+        Items.clear();
 
         // Testas su neteisingu konstruktoriumi
         try {
-            Preke p5("Neigiama kaina", -5.0, 10);
+            Item p5("Neigiama price", -5.0, 10);
             assert(false);
         } catch (const invalid_argument& e) {
             // Laukiama išimtis
         }
     }
-    assert(Preke::getObjectCount() == 0);
+    assert(Item::getObjectCount() == 0);
     cout << "Visi testai sekmingi!" << endl;
 
     return 0;
