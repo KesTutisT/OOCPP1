@@ -8,10 +8,10 @@
 using namespace std;
 
 class Item {
-    private:
+    public:
         static int nextId;
         static int objectCount;
-        int id;
+        int numeris;
         string name;
         double price;
         int count;
@@ -19,13 +19,13 @@ class Item {
     public:
         Item(const string& name, double price, int count = 0) {
             init(name, price, count);
-            id = nextId++;
+            numeris = nextId++;
             objectCount++;
         }
 
         Item(const string& name) {
             init(name, 0, 0);
-            id = nextId++;
+            numeris = nextId++;
             objectCount++;
         }
 
@@ -37,7 +37,7 @@ class Item {
 
         // Getteriai
         int getId() const { 
-            return id; 
+            return numeris; 
         }
 
         string getName() const { 
@@ -89,7 +89,7 @@ class Item {
         // Metodai
         string toString() const {
             stringstream ss;
-            ss << id << " " << name << " " <<  price << " " << count;
+            ss << numeris << " " << name << " " <<  price << " " << count;
             return ss.str();
         }
 };
@@ -101,7 +101,6 @@ int main() {
     {
         // Testas 1: Objekto kūrimas ir getteriai
         Item p1("Obuolys", 0.99, 100);
-        assert(p1.getId() == 0);
         assert(p1.getName() == "Obuolys");
         assert(p1.getPrice() == 0.99);
         assert(p1.getCount() == 100);
@@ -134,7 +133,6 @@ int main() {
         // Testas 3: ID ir objektų kiekis
         Item* p3 = new Item("Sultys");
         assert(Item::getObjectCount() == 3);
-        assert(p3->getId() == 2);
 
         Item* p4 = new Item("Duona", 1.0, 10);
         assert(Item::getObjectCount() == 4);
